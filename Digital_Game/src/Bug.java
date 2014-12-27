@@ -82,6 +82,7 @@ public class Bug extends Unit {
 
 	public void update() {
 		super.update();
+		System.out.println("run");
 		rect.setRect(x - size, x - size, size, size); // collision rect
 		for (Wall i : World.obstacles) {
 			if (rect.intersects(i.getRect())) {
