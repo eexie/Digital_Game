@@ -197,7 +197,7 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 					for (Bug i : selectedBugs)
 						i.moveTo(mx, my);
 			}
-			for (Unit i : bugs) {
+			for (Bug i : bugs) {
 				i.update();
 			}
 			for (Bullet i : bullets) {
