@@ -104,10 +104,10 @@ public class Bug extends Unit {
 	public void moveTo(int tx, int ty) {
 		this.tx = tx;
 		this.ty = ty;
-		this.tx += (int) (Math.random() * 50);
-		this.tx -= (int) (Math.random() * 50);
-		this.ty += (int) (Math.random() * 50);
-		this.ty -= (int) (Math.random() * 50);
+		//this.tx += (int) (Math.random() * 50);
+		//this.tx -= (int) (Math.random() * 50);
+		//this.ty += (int) (Math.random() * 50);
+		//this.ty -= (int) (Math.random() * 50);
 	}
 	
 	public void setHealth(int health) {
