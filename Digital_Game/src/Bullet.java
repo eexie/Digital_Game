@@ -1,6 +1,5 @@
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
 
 public class Bullet extends Unit {
 	private int x, y; // x,y
