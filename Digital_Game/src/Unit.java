@@ -8,11 +8,11 @@ public class Unit {
 	protected int speed = 5;
 	public int size;
 
-	public Unit(int x, int y,int size) {
+	public Unit(int x, int y, int size) {
 		// TODO Auto-generated constructor stub
 		this.x = x;
 		this.y = y;
-		this.size=size;
+		this.size = size;
 		dx = 0;
 		dy = 0;
 		tx = x;
@@ -38,7 +38,7 @@ public class Unit {
 			dx = 0;
 		if (dy == -5 || (dy >= 4.1 && dy <= 4.5))
 			dy = 0;
-		
+
 		x += dx;
 		y += dy;
 		// keep bug within frame
@@ -60,10 +60,6 @@ public class Unit {
 
 	}
 
-	private void die() {
-
-	}
-
 	public boolean intersects(Unit other) { // check collision with another bug
 		return this.getRect().intersects(other.getRect());
 	}
@@ -75,7 +71,8 @@ public class Unit {
 	public int getY() {
 		return y;
 	}
-	public Rectangle getRect(){
+
+	public Rectangle getRect() {
 		return new Rectangle(x - size, y - size, size * 2, size * 2);
 	}
 }
