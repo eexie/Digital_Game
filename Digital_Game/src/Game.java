@@ -74,11 +74,10 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 		map.draw(g);
 		Image sm = new ImageIcon("side-menu.png").getImage();
 		g.drawImage(sm, getWidth() - 220, 0, 220, getHeight(), null);
-		// sm.setBounds(getWidth() - 220, 0, 220, getHeight());
 		combine.setBounds(getWidth() - 190, getHeight() - 190, 170, 30);
 		pause.setBounds(getWidth() - 190, getHeight() - 130, 170, 30);
 		exit.setBounds(getWidth() - 190, getHeight() - 90, 170, 30);
-
+		
 		for (Unit i : bugs) {
 			i.draw(g);
 		}
