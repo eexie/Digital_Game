@@ -29,9 +29,10 @@ public class DefPanel extends JPanel {
 			addLabel(text);
 		}
 		gbc.insets = new Insets(10, 0, 0, 0);
-		gbc.gridy++;
+		gbc.gridy=20;
 		toMenu = new PrettyBtn("BACK TO MENU",2);
 		add(toMenu,gbc);
+		gbc.gridy=1;
 		
 	}
 	public void addButton(JButton button){
@@ -43,7 +44,11 @@ public class DefPanel extends JPanel {
 		label.setForeground(Color.WHITE);
 		gbc.gridy++;
 		gbc.insets = new Insets(10, 0, 50, 0);
-
+		add(label,gbc);
+	}
+	public void addLabel(JLabel label){
+		gbc.gridy++;
+		gbc.insets = new Insets(10, 0, 50, 0);
 		add(label,gbc);
 	}
 
