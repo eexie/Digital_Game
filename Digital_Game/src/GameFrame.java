@@ -4,9 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JLabel;
 import javax.swing.WindowConstants;
 
 /* Bugs individually move.
@@ -64,11 +65,11 @@ public class GameFrame extends JFrame implements ActionListener {
 		menuExit = menu.exit;
 		about = menu.about;
 		instructions = menu.instructions;
-		pausePanel = new DefPanel("PAUSED", "");
-		instPanel = new DefPanel("INSTRUCTIONS",
-				"Source Code is a battle strategy game");
-		aboutPanel = new DefPanel("ABOUT",
-				"Source Code was created by Emma Xie and Kevin Zheng in ICS4U, 2014-15");
+		pausePanel = new DefPanel("PAUSED");
+		instPanel = new DefPanel("INSTRUCTIONS");
+		instPanel.addLabel(new JLabel(new ImageIcon("instructions.png")));
+		aboutPanel = new DefPanel("ABOUT");
+		aboutPanel.addLabel("Source Code was created by Emma Xie and Kevin Zheng in ICS4U, 2014-15");
 		unpause = new PrettyBtn("UNPAUSE", 2);
 		instructions = menu.instructions;
 		menubtn = pausePanel.toMenu;
@@ -118,7 +119,7 @@ public class GameFrame extends JFrame implements ActionListener {
 			cards.show(c, "Game Name");
 			game.requestFocus();
 			game.getTimer().start();
-		} else if (e.getSource() == exit) {
+		} else if (e.getSource() == exit||e.getSource() == menubtn) {
 			cards.show(c, "Menu");
 			game.reset();
 		} else if (e.getSource() == instructions)
