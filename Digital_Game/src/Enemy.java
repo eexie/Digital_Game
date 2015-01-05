@@ -2,16 +2,12 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Rectangle;
-
-import javax.swing.ImageIcon;
 
 public class Enemy extends Unit {
 	private static int size;
 	protected int health;
 	private int type;
-	private Image eimg;
 	private int cooldown = 50;
 
 	public Enemy(int x, int y, int type) {
