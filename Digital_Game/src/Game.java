@@ -36,7 +36,6 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 
 	public Game() throws IOException {
 		timer = new Timer(17, this);
-		timer.start();
 		addKeyListener(this);
 		addBugs(bugs);
 		addEnemies(enemies);
@@ -247,5 +246,20 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 		}
 		clicked = false;
 		repaint();
+	}
+
+	public Timer getTimer() {
+		return timer;
+	}
+	public void reset(){
+		bugs.clear();
+		selectedBugs.clear();
+		enemies.clear();
+		bullets.clear();
+		enemyBullets.clear();
+		addBugs(bugs);
+		addEnemies(enemies);
+		selectedBugs.add((Bug) bugs.get(0));
+		selectedBugs.get(0).selected = true;
 	}
 }
