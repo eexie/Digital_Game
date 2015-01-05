@@ -1,13 +1,15 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -19,14 +21,18 @@ import javax.swing.Timer;
 public class Game extends JPanel implements ActionListener, KeyListener,
 		MouseListener {
 	private Timer timer;
-	public static ArrayList<Bug> bugs = new ArrayList<>();
-	private ArrayList<Unit> enemies = new ArrayList<>();
+	public static ArrayList<Unit> bugs = new ArrayList<>();
+	public static ArrayList<Unit> enemies = new ArrayList<>();
 	private ArrayList<Bug> selectedBugs = new ArrayList<>();
 	public static boolean clicked, shifted;
 	public static ArrayList<Bullet> bullets = new ArrayList<>();
+	public static ArrayList<Bullet> enemyBullets = new ArrayList<>();
 	private int mx, my;
 	public static World map;
+	public static int score;
 	public JButton pause, exit, combine;
+	PointerInfo a = MouseInfo.getPointerInfo();
+	Point b = a.getLocation();
 
 	public Game() throws IOException {
 		timer = new Timer(17, this);
@@ -49,20 +55,11 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 		pause.addKeyListener(this);
 		exit.addKeyListener(this);
 		addMouseListener(this);
-		addMouseMotionListener(new MouseMotionAdapter() {
-			public void mouseMoved(MouseEvent e) {
-				System.out.println(e.getX() + " " + e.getY());
-				for (Bullet i : bullets) {
-					i.setTx(e.getX());
-					i.setTy(e.getY());
-					System.out.println(i.tx + " " + i.ty);
-				}
-			}
-		});
+
 		setBackground(Color.WHITE);
 	}
 
-	public void addBugs(ArrayList<Bug> arr) {
+	public void addBugs(ArrayList<Unit> arr) {
 		for (int i = 0; i < 5; i++) {
 			bugs.add(new Bug((int) (Math.random() * 100) + 12, (int) (Math
 					.random() * 100) + 12));
@@ -70,7 +67,7 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 	}
 
 	public void addEnemies(ArrayList<Unit> arr) {
-
+		enemies.add(new Enemy(300, 300, 5));
 	}
 
 	public void paintComponent(Graphics g) {
@@ -89,14 +86,21 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 		for (Bullet i : bullets) {
 			i.draw(g);
 		}
+		for (Bullet i : enemyBullets) {
+			i.draw(g);
+		}
+
+		for (Unit i : enemies) {
+			i.draw(g);
+		}
 		// paint background, type, health for selected bugs
 		for (int i = 0; i < selectedBugs.size(); i++) {
-			g.setColor(Color.WHITE);
+			g.setColor(Color.white);
 			g.fillRect(getWidth() - 189 + i % 2 * 88, getHeight() - 419 + i / 2
 					* 116, 75, 70);
 			g.drawImage(selectedBugs.get(i).getImage(), getWidth() - 176 + i
-					% 2 * 88, getHeight() - 409 + i / 2 * 116, Unit.size * 2,
-					Unit.size * 2, null);
+					% 2 * 88, getHeight() - 409 + i / 2 * 116, Bug.size * 2,
+					Bug.size * 2, null);
 			g.drawString(selectedBugs.get(i).getType() + "", getWidth() - 129
 					+ i % 2 * 88, getHeight() - 322 + i / 2 * 115);
 		}
@@ -119,7 +123,6 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		clicked = false;
 
 	}
 
@@ -146,12 +149,16 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 		// TODO Auto-generated method stub
 		System.out.println("yes");
 		if (e.getKeyCode() == 38) {// up arrow
-			if (selectedBugs.size() < 4) {
-				Bug newSelected = (Bug) bugs.get(bugs.indexOf(selectedBugs
+			Bug newSelected = null;
+			if (selectedBugs.size() == 0) {
+				newSelected = (Bug) bugs.get(0);
+
+			} else if (selectedBugs.size() < 4) {
+				newSelected = (Bug) bugs.get(bugs.indexOf(selectedBugs
 						.get(selectedBugs.size() - 1)) - 1);
-				selectedBugs.add(newSelected);
-				newSelected.selected = true;
 			}
+			selectedBugs.add(newSelected);
+			newSelected.selected = true;
 		}
 		if (e.getKeyCode() == 40) {// down arrow
 			if (selectedBugs.size() > 1) {
@@ -190,19 +197,33 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 		if (e.getSource() == timer) {
 			if (clicked) {
 				if (shifted) { // shift on, move all bugs
-					for (Bug i : bugs)
-						i.moveTo(mx, my);
+					for (Unit i : bugs)
+						((Bug) i).moveTo(mx, my);
 				} else
 					// shift off, only move selected bugs
 					for (Bug i : selectedBugs)
 						i.moveTo(mx, my);
 			}
-			for (Bug i : bugs) {
+			for (Unit i : bugs) {
+				((Bug) i).update(map);
+			}
+			for (Unit i : enemies) {
 				i.update();
 			}
-			for (Bullet i : bullets) {
-				i.update();
+			for (int i = 0; i < selectedBugs.size(); i++) {
+				if (!bugs.contains(selectedBugs.get(i)))
+					selectedBugs.remove(selectedBugs.get(i));
+			}
+			for (int i = 0; i < bullets.size(); i++) {
+				bullets.get(i).update();
+			}
+			for (int i = 0; i < enemyBullets.size(); i++) {
+				enemyBullets.get(i).update();
+			}
+			Point p = MouseInfo.getPointerInfo().getLocation();
 
+			for (Bullet i : bullets) {
+				i.moveTo((int) p.getX(), (int) p.getY() - 50);
 			}
 		}
 
@@ -224,9 +245,7 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 			System.out.println(selectedBugs.size());
 			bugs.add(combined);
 		}
-
+		clicked = false;
 		repaint();
-
 	}
-
 }
