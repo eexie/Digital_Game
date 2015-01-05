@@ -1,5 +1,7 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
@@ -36,8 +38,12 @@ public class Bug extends Unit {
 	public void draw(Graphics g) {
 		g.setColor(Color.RED);
 		g.drawImage(timg, x - size, y - size, size * 2, size * 2, null);
-		if (selected)
+		if (selected){
+			g.setColor(new Color(240,233,34));
+			((Graphics2D)g).setStroke(new BasicStroke(3));
 			g.drawRect(x - size, y - size, size * 2, size * 2);
+		}
+		((Graphics2D)g).setStroke(new BasicStroke(1));
 		g.setColor(Color.GREEN);
 		g.fillRect(x-size, y-size, health/2, 5);
 	}
