@@ -1,3 +1,4 @@
+
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
@@ -7,14 +8,15 @@ public class Unit {
 	protected double dx, dy; // velocity x & y (has direction)
 	protected int speed = 5;
 	public int size;
+	public boolean reached;
 
 	public Unit(int x, int y, int size) {
-		// TODO Auto-generated constructor stub
 		this.x = x;
 		this.y = y;
 		this.size = size;
 		dx = 0;
 		dy = 0;
+		reached=true;
 		tx = x;
 		ty = y;
 	}
@@ -24,9 +26,13 @@ public class Unit {
 		int differenceX = tx - x;
 		int differenceY = ty - y;
 		if (differenceX == 0 && differenceY == 0) {
+			reached=true;
 			dx = 0;
 			dy = 0;
 			return;
+		}
+		else{
+			reached=false;
 		}
 		double radius = Math.sqrt(differenceX * differenceX + differenceY
 				* differenceY);
@@ -61,7 +67,7 @@ public class Unit {
 	}
 
 	public boolean intersects(Unit other) { // check collision with another bug
-		return this.getRect().intersects(other.getRect());
+		return this.getCollision().intersects(other.getCollision());
 	}
 
 	public int getX() {
@@ -72,7 +78,7 @@ public class Unit {
 		return y;
 	}
 
-	public Rectangle getRect() {
+	public Rectangle getCollision() {
 		return new Rectangle(x - size, y - size, size * 2, size * 2);
 	}
 }
