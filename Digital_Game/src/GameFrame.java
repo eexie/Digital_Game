@@ -83,12 +83,12 @@ public class GameFrame extends JFrame implements ActionListener {
 			game.getTimer().start();
 		} else if (e.getSource() == exit || e.getSource() == menubtn) {
 			cards.show(c, "Menu");
-//			try {
-//				game.reset();
-//			} catch (IOException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
+			try {
+				game.reset();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		} else if (e.getSource() == instructions)
 			cards.show(c, "Instructions");
 		else if (e.getSource() == about)
@@ -102,12 +102,12 @@ public class GameFrame extends JFrame implements ActionListener {
 
 	public static void showGameOver() {
 		cards.show(c, "Game Over");
-//		try {
-//			game.reset();
-//		} catch (IOException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
+		try {
+			game.reset();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	public static void main(String args[]) throws IOException {
