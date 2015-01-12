@@ -11,17 +11,18 @@ import terrain.Terrain;
 public class Bug extends Unit {
 	private int type;
 	private Image timg;
-	static int SEPARATE_THRESHHOLD = 20;
 	public boolean selected;
 	public Bullet bullet;
 	protected int health;
 	public static int size = 25;
+	public final int MAXHEALTH = 80 + 20 * type;
 
 	public Bug(int x, int y) {
-		super(x, y, size);
+		super(x, y);
+		super.size = size;
 		type = 1;
 		updateImage();
-		health = 80 + 20 * type;
+		health = MAXHEALTH;
 	}
 
 	public int getType() {
@@ -38,15 +39,21 @@ public class Bug extends Unit {
 
 	public void draw(Graphics g) {
 		g.setColor(Color.RED);
-		g.drawImage(timg, x - size, y - size, size * 2, size * 2, null);
+		g.drawImage(timg, x - size - cx, y - size - cy, size * 2, size * 2,
+				null);
 		if (selected) {
 			g.setColor(new Color(240, 233, 34));
 			((Graphics2D) g).setStroke(new BasicStroke(3));
-			g.drawRect(x - size, y - size, size * 2, size * 2);
+			g.drawRect(x - size - cx, y - size - cy, size * 2, size * 2);
 		}
 		((Graphics2D) g).setStroke(new BasicStroke(1));
-		g.setColor(Color.GREEN);
-		g.fillRect(x - size, y - size, health / 2, 5);
+		if (health > MAXHEALTH / 2)
+			g.setColor(Color.GREEN);
+		else
+			g.setColor(Color.RED);
+		g.fillRect(x - size - cx, y - size - cy, health / 2, 5); // health bar
+		// g.drawRect(x - size - cx, y - size - cy, size * 2, size *
+		// 2);//collision box
 	}
 
 	public Image getImage() {
@@ -93,8 +100,8 @@ public class Bug extends Unit {
 	}
 
 	public void update(World map) { // collision rect
-
-		for (Terrain i : map.getSect().getMap()) {
+		for (Terrain i : map.getSect().getMap()) {// check collision with
+													// terrain
 			if (i.getSolid()
 					&& super.getCollision().intersects(i.getCollision())) {
 				if (Math.abs(tx - x) > Math.abs(ty - y)) {
@@ -110,8 +117,6 @@ public class Bug extends Unit {
 				}
 				tx = x;
 				ty = y;
-				System.out.println("box" + x + " " + y);
-				System.out.println(i.getX() + " " + i.getY());
 			} else {
 				if (!i.getSolid()
 						&& super.getCollision().intersects(i.getCollision())) {
@@ -119,8 +124,7 @@ public class Bug extends Unit {
 					switch (active) {
 					case 0:
 						break;
-					case 1:
-						System.out.print("We did it, O:");
+					case 1:// captured checkpoint
 						break;
 					case 3:
 						map.change(1);
@@ -141,25 +145,14 @@ public class Bug extends Unit {
 	public void moveTo(int tx, int ty) {
 		this.tx = tx;
 		this.ty = ty;
-		this.tx += (int) (Math.random() * 50);
-		this.tx -= (int) (Math.random() * 50);
-		this.ty += (int) (Math.random() * 50);
-		this.ty -= (int) (Math.random() * 50);
-	}
-
-	public void separate() {
-		for (Unit i : Game.bugs) {
-			if (i == this)
-				continue;
-			int distance = (int) Math.sqrt((Math.pow(this.x - i.x, 2) + Math
-					.pow(this.y - i.y, 2)));
-			if (distance < SEPARATE_THRESHHOLD) {
-
-			}
-		}
+		// this.tx += (int) (Math.random() * 50);
+		// this.tx -= (int) (Math.random() * 50);
+		// this.ty += (int) (Math.random() * 50);
+		// this.ty -= (int) (Math.random() * 50);
 	}
 
 	public void setHealth(int health) {
 		this.health = health;
 	}
+
 }
