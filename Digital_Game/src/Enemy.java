@@ -1,28 +1,47 @@
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
 
 public class Enemy extends Unit {
-	private static int size;
+	private int size;
 	protected int health;
 	private int type;
-	private int cooldown = 50;
+	private int cooldown = 10, distance;
 	private int direction;
+	private String mDirection = "";
 
-	public Enemy(int x, int y, int type) {
-		super(x, y, size);
-		this.type = type;
+	public Enemy(int x, int y, int type, String mDirection, int distance,
+			int speed) {
+		super(x, y);
 		size = 20 * type;
+		super.size = size;
+		this.type = type;
+		this.mDirection = mDirection;
+		this.distance = distance;
+		this.speed = speed;
+		System.out.println("distance:" + distance);
+		setMovement(distance);
 		health = (int) (90 + Math.pow(2, type));
-		if (type == 1||type==2) {
-			direction = (int) (Math.random() * 4) + 1;
-		}
-		System.out.println(direction);
+		if (mDirection.equals("h"))
+
+			direction = (int) (Math.random() * 2) + 3;
+		else
+			direction = (int) (Math.random() * 2) + 1;
+		System.out.println("direction" + direction);
+		System.out.println(type);
 	}
+
+	// public Enemy(int x, int y, int type){
+	// super(x,y,size);
+	// this.type = type;
+	// size = 20 * type;
+	// health = (int) (90 + Math.pow(2, type));
+	// System.out.println(type);
+	// if (type == 1 || type == 2)
+	// direction = (int) (Math.random() * 4) + 1;
+	// }
 
 	public void attack() {
 		switch (type) {
@@ -45,10 +64,15 @@ public class Enemy extends Unit {
 	}
 
 	public void update() {
-		cooldown--;
-		if (cooldown == 25) {
+		if (cooldown == 10) {
 			attack();
-			cooldown = 50;
+			cooldown = 20;
+		}
+		cooldown--;
+		if (tx == x && ty == y) {
+			setMovement(-distance);
+		} else if (tx != x || ty != y) {
+			super.update();
 		}
 	}
 
@@ -84,7 +108,7 @@ public class Enemy extends Unit {
 
 	public void fireStraight(int damage) {
 		int x2 = x + size, y2 = y + size;
-		Bullet newBullet = new Bullet(x2, y2, 30*type, 1, "enemy");
+		Bullet newBullet = new Bullet(x2, y2, 30 * type, 1, "enemy", speed);
 		switch (direction) {
 		case 1: // move straight left
 			newBullet.moveTo(0, y2 + 1);
@@ -97,7 +121,6 @@ public class Enemy extends Unit {
 			break;
 		case 4: // move straight down
 			newBullet.moveTo(x2, 700);
-			newBullet.ty = 700;
 			break;
 		}
 		Game.enemyBullets.add(newBullet);
@@ -162,7 +185,21 @@ public class Enemy extends Unit {
 	}
 
 	public Ellipse2D.Double getBound() {
-//		return new Rectangle(x, y, size * 2, size * 2);
-		return new Ellipse2D.Double(x, y, size*2, size*2);
+		// return new Rectangle(x, y, size * 2, size * 2);
+		return new Ellipse2D.Double(x, y, size * 2, size * 2);
+	}
+
+	public void setMovement(int distance) {
+		this.distance = distance;
+		switch (mDirection) {
+		case "v":
+			ty = y + distance;
+			// tx=x+3;
+			break;
+		case "h":
+			tx = x + distance;
+			// ty=y+3;
+			break;
+		}
 	}
 }
