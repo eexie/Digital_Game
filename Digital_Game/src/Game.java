@@ -78,10 +78,12 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 	}
 
 	public void addBugs(ArrayList<Bug> arr) {
+		int size = (int) Math.sqrt(10);
 		for (int i = 0; i < 10; i++) {
-			bugs.add(new Bug((int) (Math.random() * 100) + 12, (int) (Math
-					.random() * 100) + 12));
+			bugs.add(new Bug(300+i % size * Bug.size * 2 - size * Bug.size, 100+i
+					* Bug.size * 2 / size - size * Bug.size));
 		}
+
 	}
 
 	public void paintComponent(Graphics g) {
@@ -281,7 +283,7 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if (e.getSource() == timer) {
-			if (bugs.size() == 0) {// losing condition{
+			if (bugs.size() == 0) {// losing condition
 				System.out.println("Game Over");
 				GameFrame.showGameOver();
 			}
@@ -293,13 +295,12 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 						bugs.get(0).moveTo(mx, my);
 					} else {
 						size = (int) Math.sqrt(bugs.size());
-						bug_size = bugs.get(0).size;
 						for (int i = 0; i < bugs.size(); i++) {
 							bugs.get(i).moveTo(
-									mx + i % size * bug_size * 2 - size
-											* bug_size,
-									my + i * bug_size * 2 / size - size
-											* bug_size);
+									mx + i % size * Bug.size * 2 - size
+											* Bug.size,
+									my + i * Bug.size * 2 / size - size
+											* Bug.size);
 						}
 					}
 				} else {
@@ -332,8 +333,8 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 					}
 				}
 			}
-			for (Unit i : bugs) {
-				((Bug) i).update(map);
+			for (int i = 0; i < bugs.size(); i++) {
+				((Bug) bugs.get(i)).update(map);
 			}
 			for (Enemy i : enemies)
 				i.update();
