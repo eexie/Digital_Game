@@ -7,6 +7,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 import terrain.Terrain;
+import terrain.CheckPoint;
 
 public class Bug extends Unit {
 	private int type;
@@ -122,11 +123,14 @@ public class Bug extends Unit {
 						&& super.getCollision().intersects(i.getCollision())) {
 					int active = i.active();
 					switch (active) {
-					case 0:
+					case 100: // picked up resource for new bug
+						Game.bugs.add(new Bug(i.getX(), i.getY()));
+						map.getSect().getMap().remove(this);
 						break;
 					case 1:// captured checkpoint
+						((CheckPoint) i).setCapture(true);
 						break;
-					case 3:
+					case 3: // teleporter
 						map.change(1);
 						break;
 					case 4:
@@ -137,6 +141,7 @@ public class Bug extends Unit {
 
 					}
 				}
+				
 				super.update();
 			}
 		}
