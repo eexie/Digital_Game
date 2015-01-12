@@ -1,4 +1,3 @@
-
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
@@ -6,17 +5,18 @@ public class Unit {
 	protected int x, y; // position coordinates
 	protected int tx, ty; // target coordinates
 	protected double dx, dy; // velocity x & y (has direction)
+	protected static int cx, cy; // Map Scrolling Displacement
 	protected int speed = 5;
-	public int size;
+	public int size = 5;
 	public boolean reached;
+	public boolean moved = false;
 
-	public Unit(int x, int y, int size) {
+	public Unit(int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.size = size;
 		dx = 0;
 		dy = 0;
-		reached=true;
+		reached = false;
 		tx = x;
 		ty = y;
 	}
@@ -26,13 +26,12 @@ public class Unit {
 		int differenceX = tx - x;
 		int differenceY = ty - y;
 		if (differenceX == 0 && differenceY == 0) {
-			reached=true;
+			reached = true;
 			dx = 0;
 			dy = 0;
 			return;
-		}
-		else{
-			reached=false;
+		} else {
+			reached = false;
 		}
 		double radius = Math.sqrt(differenceX * differenceX + differenceY
 				* differenceY);
@@ -40,10 +39,10 @@ public class Unit {
 		double sinangle = differenceY / radius;
 		dx = speed * cosangle;
 		dy = speed * sinangle;
-		if (dx == -5 || (dx >= 4.1 && dx <= 4.5))
-			dx = 0;
-		if (dy == -5 || (dy >= 4.1 && dy <= 4.5))
-			dy = 0;
+		// if (dx == -5 || (dx >= 4.1 && dx <= 1))
+		// dx = 0;
+		// if (dy == -5 || (dy >= 4.1 && dy <= 1))
+		// dy = 0;
 
 		x += dx;
 		y += dy;
@@ -70,12 +69,35 @@ public class Unit {
 		return this.getCollision().intersects(other.getCollision());
 	}
 
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public static void setXY(int x, int y) {
+		cx = x;
+		cy = y;
+	}
+
 	public int getX() {
 		return x;
 	}
 
 	public int getY() {
 		return y;
+	}
+
+	public int getTx() {
+		// TODO Auto-generated method stub
+		return tx;
+	}
+
+	public int getTy() {
+		// TODO Auto-generated method stub
+		return ty;
 	}
 
 	public Rectangle getCollision() {
