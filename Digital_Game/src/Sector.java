@@ -14,7 +14,7 @@ import terrain.Terrain;
 public class Sector {
 	Rectangle rect;
 	String data;
-	private Terrain[] map;
+	private ArrayList<Terrain> map;
 	ImageIcon bg;
 	private int num;
 
@@ -28,8 +28,8 @@ public class Sector {
 
 	public void draw(Graphics g, int x, int y) {
 		g.drawImage(bg.getImage(), 0, 0, 1024, 720, null);
-		for (int i = 0; i < map.length; i++) {
-			map[i].draw(g, x, y);
+		for (int i = 0; i < map.size(); i++) {
+			map.get(i).draw(g, x, y);
 		}
 	}
 
@@ -37,12 +37,12 @@ public class Sector {
 		return rect;
 	}
 
-	public void setMap(Terrain[] map) {
+	public void setMap(ArrayList<Terrain> map) {
 		this.map = map;
-		map[0] = new Boundary(0, 0, rect.width, rect.height);
+		map.add(0, new Boundary(0, 0, rect.width, rect.height));
 	}
 
-	public Terrain[] getMap() {
+	public ArrayList<Terrain> getMap() {
 		return map;
 	}
 
