@@ -1,7 +1,14 @@
 import java.awt.Graphics;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
-import terrain.*;
+import terrain.CheckPoint;
+import terrain.Resource;
+import terrain.Teleporter;
+import terrain.Terrain;
+import terrain.Wall;
 
 public class World {
 	private int mx, my;
@@ -55,37 +62,47 @@ public class World {
 			Terrain[] map = new Terrain[Integer.parseInt(sc.readLine())];
 			for (int u = 0; u < map.length; u++) {
 				data = sc.readLine();
+				Terrain t =null;
 				switch (data.charAt(0)) {
 				case 'W':
-					Wall wall = new Wall(
+					t = new Wall(
 							Integer.parseInt(data.substring(
 									data.indexOf("x") + 1, data.indexOf("y"))),
 							Integer.parseInt(data.substring(data.indexOf("y") + 1)));
-					map[u] = wall;
+					
 					break;
+				case 'R':
+					t = new Resource(
+							Integer.parseInt(data.substring(
+									data.indexOf("x") + 1, data.indexOf("y"))),
+							Integer.parseInt(data.substring(data.indexOf("y") + 1)));
 				case 'C':
-					map[u] = new CheckPoint(
+					t = new CheckPoint(
 							Integer.parseInt(data.substring(
 									data.indexOf("x") + 1, data.indexOf("y"))),
 							Integer.parseInt(data.substring(data.indexOf("y") + 1)));
 					break;
 				case 'T':
-					map[u] = new Teleporter(
+					t = new Teleporter(
 							Integer.parseInt(data.substring(
 									data.indexOf("x") + 1, data.indexOf("y"))),
 							Integer.parseInt(data.substring(data.indexOf("y") + 1)),
 							1);
 					break;
 				case 't':
-					map[u] = new Teleporter(
+					t = new Teleporter(
 							Integer.parseInt(data.substring(
 									data.indexOf("x") + 1, data.indexOf("y"))),
 							Integer.parseInt(data.substring(data.indexOf("y") + 1)),
 							-1);
 					break;
 				}
+				map[u] = t;
 			}
-			sectors[i].setMap(map);
+			ArrayList<Terrain> m = new ArrayList<>();
+			for (Terrain j : map)
+				m.add(j);
+			sectors[i].setMap(m);
 		}
 	}
 
