@@ -1,14 +1,10 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-import terrain.Boundary;
 import terrain.Terrain;
 
 public class Sector {
