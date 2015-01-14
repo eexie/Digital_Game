@@ -7,23 +7,21 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 import terrain.Terrain;
-import terrain.CheckPoint;
 
 public class Bug extends Unit {
 	private int type;
 	private Image timg;
 	public boolean selected;
 	public Bullet bullet;
-	protected int health;
 	public static int size = 25;
-	public final int MAXHEALTH = 80 + 20 * type;
 
 	public Bug(int x, int y) {
 		super(x, y);
 		super.size = size;
 		type = 1;
 		updateImage();
-		health = MAXHEALTH;
+		maxHealth = 100 + 100 * type;
+		health = maxHealth;
 	}
 
 	public int getType() {
@@ -39,6 +37,7 @@ public class Bug extends Unit {
 	}
 
 	public void draw(Graphics g) {
+		super.draw(g, Color.GREEN);
 		g.setColor(Color.RED);
 		g.drawImage(timg, x - size - cx, y - size - cy, size * 2, size * 2,
 				null);
@@ -48,39 +47,43 @@ public class Bug extends Unit {
 			g.drawRect(x - size - cx, y - size - cy, size * 2, size * 2);
 		}
 		((Graphics2D) g).setStroke(new BasicStroke(1));
-		if (health > MAXHEALTH / 2)
+
+		// draw healthbar
+		double one = (double)size*2/maxHealth;
+		if (health > maxHealth / 2)
 			g.setColor(Color.GREEN);
 		else
 			g.setColor(Color.RED);
-		g.fillRect(x - size - cx, y - size - cy, health / 2, 5); // health bar
+		g.fillRect(x - size - cx, y - size - cy, (int)(health*one), 5); // health bar
 		// g.drawRect(x - size - cx, y - size - cy, size * 2, size *
 		// 2);//collision box
+
 	}
 
 	public Image getImage() {
 		return timg;
 	}
 
-	public void attack() {
-		switch (type) {
-		case 1:
-			fire(40, 5);
-			break;
-		case 2:
-			fire(40, 10);
-			break;
-		case 3:
-			fire(80, 5);
-			break;
-		case 4:
-			fire(80, 10);
-			break;
-		case 5:
-			fire(80, 20);
-			break;
-
-		}
-	}
+	// public void attack() {
+	// switch (type) {
+	// case 1:
+	// fire(40, 5);
+	// break;
+	// case 2:
+	// fire(40, 10);
+	// break;
+	// case 3:
+	// fire(80, 5);
+	// break;
+	// case 4:
+	// fire(80, 10);
+	// break;
+	// case 5:
+	// fire(80, 20);
+	// break;
+	//
+	// }
+	// }
 
 	public int getX() {
 		return x;
@@ -122,34 +125,60 @@ public class Bug extends Unit {
 				if (!i.getSolid()
 						&& super.getCollision().intersects(i.getCollision())) {
 					int active = i.active();
+
+					// ACTIVES RETURNED BY THE TERRAIN
+					//
+					//
+					//
+					//
+					//
 					switch (active) {
-					case 100: // picked up resource for new bug
-						Game.bugs.add(new Bug(i.getX(), i.getY()));
-						map.getSect().getMap().remove(this);
+					case 0:
 						break;
-					case 1:// captured checkpoint
-						System.out.println("1");
-						((CheckPoint) i).setCapture(true);
+					case 1:
+						// Check point captured. Show's the captured point.
 						break;
-					case 3: // teleporter
-						System.out.println("3");
+					case 2:
+						// Moves to a different level of Map.
 						map.change(1);
 						break;
-					case 4:
+					case 3:
 						map.change(-1);
 						break;
-
-					// Check point captured. Show's the captured point.
-
+					case 100: // picked up resource for new bug
+						Game.bugs.add(new Bug(i.getX(), i.getY()));
+						map.getSect().getMap().remove(i);
+						break;
 					}
 				}
-				
 				super.update();
+				switch (type) {
+				case 1:
+				case 2:
+					damage = 1;
+					break;
+				case 3:
+				case 4:
+					damage = 2;
+					break;
+				case 5:
+					damage = 5;
+					break;
+				}
+				attack(1);
 			}
+		}
+
+		// Mechanics.
+		if (health > maxHealth) {
+			health = maxHealth;
 		}
 	}
 
 	public void moveTo(int tx, int ty) {
+		attack = null;
+		support = null;
+		combat = false;
 		this.tx = tx;
 		this.ty = ty;
 		// this.tx += (int) (Math.random() * 50);
