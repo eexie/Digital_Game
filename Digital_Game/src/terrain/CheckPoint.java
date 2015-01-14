@@ -34,7 +34,7 @@ public class CheckPoint extends Terrain {
 					- size - y, size * 2, size * 2));
 		}
 	}
-
+	
 	@Override
 	public int active() {
 		count++;
