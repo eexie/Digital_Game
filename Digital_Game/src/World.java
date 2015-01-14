@@ -18,7 +18,7 @@ public class World {
 	static Sector[] sectors;
 	final int[] A = { 0, -1, 1, 0 };
 	final int[] B = { -1, 0, 0, 1 };
-
+	
 	public World() {
 		level = 0;
 		tx = 0;
