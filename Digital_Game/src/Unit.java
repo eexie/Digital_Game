@@ -1,4 +1,7 @@
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 public class Unit {
@@ -7,9 +10,19 @@ public class Unit {
 	protected double dx, dy; // velocity x & y (has direction)
 	protected static int cx, cy; // Map Scrolling Displacement
 	protected int speed = 5;
-	public int size = 5;
+	protected int size;
 	public boolean reached;
 	public boolean moved = false;
+	protected int type;
+	protected int damage;
+
+	// Allows for interactions between units.
+	public Unit attack;
+	public Bug support;
+	public boolean alive;
+	public boolean combat;
+	protected int health;
+	protected int maxHealth;
 
 	public Unit(int x, int y) {
 		this.x = x;
@@ -22,6 +35,8 @@ public class Unit {
 	}
 
 	public void update() {
+		// Interactions with other units.
+
 		// move bug
 		int differenceX = tx - x;
 		int differenceY = ty - y;
@@ -39,26 +54,71 @@ public class Unit {
 		double sinangle = differenceY / radius;
 		dx = speed * cosangle;
 		dy = speed * sinangle;
-		// if (dx == -5 || (dx >= 4.1 && dx <= 1))
-		// dx = 0;
-		// if (dy == -5 || (dy >= 4.1 && dy <= 1))
-		// dy = 0;
+		if (dx == -5 || (dx >= 4.1 && dx <= 4.5))
+			dx = 0;
+		if (dy == -5 || (dy >= 4.1 && dy <= 4.5))
+			dy = 0;
 
 		x += dx;
 		y += dy;
 		// keep bug within frame
-		if (x > 780 - size)
-			x = 780 - size;
-		if (y > 680 - size)
-			y = 680 - size;
-		if (x < size)
-			x = size;
-		if (y < size)
-			y = size;
+		if (cx == 0) {
+			if (x > 780 - size)
+				x = 780 - size;
+
+			if (x + cx < size)
+				x = size;
+		}
+		if (cy == 0) {
+			if (y > 680 - size)
+				y = 680 - size;
+			if (y + cy < size)
+				y = size;
+		}
 	}
 
-	public void draw(Graphics g) {
-		g.fillOval(x - size, y - size, size * 2, size * 2);
+	public void draw(Graphics g, Color c) {
+		Graphics2D graph = (Graphics2D) g;
+		graph.setStroke(new BasicStroke(3));
+		g.setColor(c);
+		if (attack != null) {
+			graph.drawLine(x - cx, y - cy, attack.x - cx, attack.y - cy);
+		} else if (support != null) {
+			graph.drawLine(x - cx, y - cy, support.x - cx, support.y - cy);
+		}
+	}
+
+	public void attack(int identity) {
+		if (attack != null) {
+			combat = true;
+			attack.health -= damage;
+			if (attack.health < 0) {
+				if (identity == 1) {// is a bug
+					Game.enemies.remove(attack);
+				} else if (identity == 2)// is an enemy
+					Game.bugs.remove(attack);
+				combat = false;
+				attack = null;
+			}
+		}
+		if (support != null) {
+			combat = true;
+			support.health++;
+			if (support.health == maxHealth) {
+				support = null;
+			}
+		}
+		if (combat) {
+			return;
+		}
+	}
+
+	public void setAttack(Unit opponent) {
+		attack = opponent;
+	}
+
+	public void setSupport(Bug ally) {
+		support = ally;
 	}
 
 	public void stop() {
@@ -91,16 +151,18 @@ public class Unit {
 	}
 
 	public int getTx() {
-		// TODO Auto-generated method stub
 		return tx;
 	}
 
 	public int getTy() {
-		// TODO Auto-generated method stub
 		return ty;
 	}
 
 	public Rectangle getCollision() {
 		return new Rectangle(x - size, y - size, size * 2, size * 2);
+	}
+
+	public int getSize() {
+		return size;
 	}
 }
