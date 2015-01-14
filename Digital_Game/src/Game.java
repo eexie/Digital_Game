@@ -17,8 +17,8 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 	public static ArrayList<Bug> bugs = new ArrayList<>();
 	public static ArrayList<ArrayList<Enemy>> enemies = new ArrayList<>();
 	static ArrayList<Bug> selectedBugs = new ArrayList<>();
-	public static ArrayList<Bullet> bullets = new ArrayList<>();
-	public static ArrayList<Bullet> enemyBullets = new ArrayList<>();
+//	public static ArrayList<Bullet> bullets = new ArrayList<>();
+//	public static ArrayList<Bullet> enemyBullets = new ArrayList<>();
 	public static boolean left_clicked, right_clicked, shifted, space;
 	private int mx, my; // movement
 	private Rectangle dragBox; // Selection
@@ -110,12 +110,12 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 		for (Bug i : bugs) {
 			i.draw(g);
 		}
-		for (Bullet i : bullets) {
-			i.draw(g);
-		}
-		for (Bullet i : enemyBullets) {
-			i.draw(g);
-		}
+//		for (Bullet i : bullets) {
+//			i.draw(g);
+//		}
+//		for (Bullet i : enemyBullets) {
+//			i.draw(g);
+//		}
 		for (Enemy i : enemies.get(map.getLevel()))
 			i.draw(g);
 
@@ -404,17 +404,17 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 				if (!bugs.contains(selectedBugs.get(i)))
 					selectedBugs.remove(selectedBugs.get(i));
 			}
-			for (int i = 0; i < bullets.size(); i++) {
-				bullets.get(i).update();
-			}
-			for (int i = 0; i < enemyBullets.size(); i++) {
-				enemyBullets.get(i).update();
-			}
-			Point p = MouseInfo.getPointerInfo().getLocation();
-
-			for (Bullet i : bullets) {
-				i.moveTo((int) p.getX(), (int) p.getY() - 50);
-			}
+//			for (int i = 0; i < bullets.size(); i++) {
+//				bullets.get(i).update();
+//			}
+//			for (int i = 0; i < enemyBullets.size(); i++) {
+//				enemyBullets.get(i).update();
+//			}
+//			Point p = MouseInfo.getPointerInfo().getLocation();
+//
+//			for (Bullet i : bullets) {
+//				i.moveTo((int) p.getX(), (int) p.getY() - 50);
+//			}
 		}
 
 		if (e.getSource() == combine) {/* combine */
@@ -501,8 +501,8 @@ public class Game extends JPanel implements ActionListener, KeyListener,
 		bugs.clear();
 		selectedBugs.clear();
 		enemies.clear();
-		bullets.clear();
-		enemyBullets.clear();
+//		bullets.clear();
+//		enemyBullets.clear();
 		new Game();
 
 	}
